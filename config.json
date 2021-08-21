@@ -1,4 +1,7 @@
 {
-    "mode": "slave",
-    "slaves": []
+    "mode": "master",
+    "slaves": [],
+    "tempThreshold": 30,
+    "percentageThreshold": 50,
+    "pins": []
 }

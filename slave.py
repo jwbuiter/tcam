@@ -12,6 +12,6 @@ def run(config):
     @app.route("/data")
     def frame_data():
         frame = tcam.update()
-        return json.dumps([base64.b64encode(frame).decode('ascii')])
+        return json.dumps([str(frame.dtype), base64.b64encode(frame).decode('ascii'), frame.shape])
 
     app.run("0.0.0.0")

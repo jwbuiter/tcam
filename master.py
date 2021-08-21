@@ -1,22 +1,38 @@
-import time
+import json
+import base64
+
+import requests
+import RPi.GPIO
+import numpy
 
 import tcam
 
 
-t_array = []
-
-
 def run(config):
+    tempThreshold = config['tempThreshold']
+    percentageThreshold = config['percentageThreshold']
+
     while True:
-        t1 = time.monotonic()  # for determining frame rate
+        frames = []
         try:
-            tcam.update()
+            frames.append(tcam.update())
         except:
             continue
 
-        time.sleep(0.5)
-        # approximating frame rate
-        t_array.append(time.monotonic()-t1)
-        if len(t_array) > 10:
-            t_array = t_array[1:]  # recent times for frame rate approx
-        print('Frame Rate: {0:2.1f}fps'.format(len(t_array)/np.sum(t_array)))
+        for address in config['slaves']:
+            r = requests.get(address + '/data')
+            encodedFrame = json.loads(r.text)
+            dataType = numpy.dtype(encodedFrame[0])
+            dataArray = numpy.frombuffer(
+                base64.b64decode(encodedFrame[1]), dataType)
+            dataArray.reshape(encodedFrame[2])
+
+            frames.append(dataArray)
+
+        frame = frames[0]
+
+        print(frame)
+        print(numpy.where(frame > tempThreshold, 1, 0))
+        print(tempThreshold)
+        print(numpy.average(numpy.where(frame > tempThreshold, 1, 0))
+              * 100)
