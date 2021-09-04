@@ -1,38 +1,32 @@
-import json
-import base64
+import time
 
 import requests
-import RPi.GPIO
-import numpy
-
-import tcam
+import RPi.GPIO as GPIO
 
 
 def run(config):
-    tempThreshold = config['tempThreshold']
-    percentageThreshold = config['percentageThreshold']
+    for rule in config['rules']:
+        GPIO.setup(rule['gpio'], GPIO.OUT, initial=GPIO.LOW)
 
     while True:
-        frames = []
-        try:
-            frames.append(tcam.update())
-        except:
-            continue
-
+        percentages = []
         for address in config['slaves']:
             r = requests.get(address + '/data')
-            encodedFrame = json.loads(r.text)
-            dataType = numpy.dtype(encodedFrame[0])
-            dataArray = numpy.frombuffer(
-                base64.b64decode(encodedFrame[1]), dataType)
-            dataArray.reshape(encodedFrame[2])
+            percentages.append(float(r.text))
 
-            frames.append(dataArray)
+        for rule in config['rules']:
+            enabled = False
 
-        frame = frames[0]
+            if rule['check'] == 'any':
+                for slave in rule['slaves']:
+                    if percentages[slave] > rule['percentage']:
+                        enabled = True
+            elif rule['check'] == 'all':
+                enabled = True
+                for slave in rule['slaves']:
+                    if percentages[slave] < rule['percentage']:
+                        enabled = False
 
-        print(frame)
-        print(numpy.where(frame > tempThreshold, 1, 0))
-        print(tempThreshold)
-        print(numpy.average(numpy.where(frame > tempThreshold, 1, 0))
-              * 100)
+            GPIO.output(rule['gpio'], enabled)
+
+        time.sleep(1)

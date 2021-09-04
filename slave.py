@@ -1,6 +1,7 @@
 import base64
 import json
 
+import numpy as np
 from flask import Flask
 
 import tcam
@@ -11,7 +12,6 @@ def run(config):
 
     @app.route("/data")
     def frame_data():
-        frame = tcam.update()
-        return json.dumps([str(frame.dtype), base64.b64encode(frame).decode('ascii'), frame.shape])
+        return str(tcam.get_weighted_percentage())
 
     app.run("0.0.0.0")

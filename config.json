@@ -1,7 +1,25 @@
 {
-    "mode": "master",
-    "slaves": [],
+    "mode": "slave",
+    "slaves": [
+        "http://localhost:5000"
+    ],
     "tempThreshold": 30,
-    "percentageThreshold": 50,
-    "pins": []
+    "rules": [
+        {
+            "gpio": 17,
+            "percentage": 20,
+            "check": "any",
+            "slaves": [
+                0
+            ]
+        },
+        {
+            "gpio": 18,
+            "percentage": 20,
+            "check": "all",
+            "slaves": [
+                0
+            ]
+        }
+    ]
 }
