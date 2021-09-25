@@ -14,9 +14,12 @@ import debug
 
 np.set_printoptions(suppress=True, linewidth=200)
 
-i2c = busio.I2C(board.SCL, board.SDA, frequency=400000)  # setup I2C
-mlx = adafruit_mlx90640.MLX90640(i2c)  # begin MLX90640 with I2C comm
-mlx.refresh_rate = adafruit_mlx90640.RefreshRate.REFRESH_4_HZ  # set refresh rate
+try:
+    i2c = busio.I2C(board.SCL, board.SDA, frequency=400000)  # setup I2C
+    mlx = adafruit_mlx90640.MLX90640(i2c)  # begin MLX90640 with I2C comm
+    mlx.refresh_rate = adafruit_mlx90640.RefreshRate.REFRESH_4_HZ  # set refresh rate
+except:
+    pass
 mlx_shape = (24, 32)  # mlx90640 shape
 frame = np.zeros(mlx_shape[0]*mlx_shape[1])
 
