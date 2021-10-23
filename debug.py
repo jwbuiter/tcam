@@ -14,4 +14,4 @@ def run():
         frame = np.round(tcam.get_frame())
         print(frame)
         np.savetxt('/home/pi/Documents/' + filename +
-                   '.csv', frame, delimiter=';', fmt='%.1f')
+                   '.csv', frame, delimiter=';', fmt='%d')
