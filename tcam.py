@@ -43,8 +43,12 @@ def get_frame_threshold():
     return np.where(get_frame() > 30, 1, 0)
 
 
+def get_frame_mapped():
+    return np.multiply(map, get_frame_threshold())
+
+
 def get_weighted_percentage():
-    return 100*np.sum(get_frame_threshold())/np.sum(map)
+    return 100*np.sum(get_frame_mapped())/np.sum(map)
 
 
 def main():
