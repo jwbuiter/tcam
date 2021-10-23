@@ -26,8 +26,11 @@ frame = np.zeros(mlx_shape[0]*mlx_shape[1])
 with open(os.path.join(sys.path[0], 'config.json')) as f:
     config = json.load(f)
 
-with open(os.path.join(sys.path[0], 'map.csv'), 'r', encoding='utf-8-sig') as f:
-    map = np.genfromtxt(f, dtype=float, delimiter=';')
+try:
+    with open(os.path.join(sys.path[0], 'map.csv'), 'r', encoding='utf-8-sig') as f:
+        map = np.genfromtxt(f, dtype=float, delimiter=';')
+except:
+    map = np.ones(mlx_shape)
 
 
 def get_frame():
