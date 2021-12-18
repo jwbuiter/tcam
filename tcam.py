@@ -25,6 +25,7 @@ frame = np.zeros(mlx_shape[0]*mlx_shape[1])
 
 with open(os.path.join(sys.path[0], 'config.json')) as f:
     config = json.load(f)
+    threshold = config['tempThreshold']
 
 try:
     with open(os.path.join(sys.path[0], 'map.csv'), 'r', encoding='utf-8-sig') as f:
@@ -43,7 +44,7 @@ def get_frame():
 
 
 def get_frame_threshold():
-    return np.where(get_frame() > 30, 1, 0)
+    return np.where(get_frame() > threshold, 1, 0)
 
 
 def get_frame_mapped():
