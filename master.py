@@ -24,7 +24,7 @@ def run(config):
 
     for rule in rules:
         GPIO.setup(rule['gpio'], GPIO.OUT, initial=GPIO.LOW)
-    GPIO.setup(errorGpio, GPIO.OUT, initial=GPIO.LOW)
+    GPIO.setup(errorGpio, GPIO.OUT, initial=GPIO.HIGH)
 
     numFailures = 0
 
@@ -43,10 +43,10 @@ def run(config):
             numFailures += 1
 
             for rule in rules:
-                GPIO.output(rule['gpio'], False)
+                GPIO.output(rule['gpio'], True)
 
             if numFailures >= config['errorCount']:
-                GPIO.output(errorGpio, True)
+                GPIO.output(errorGpio, False)
                 if numFailures % config['errorCount'] == 0:
                     updateFailureLog(failedAddresses)
 
@@ -54,20 +54,13 @@ def run(config):
             continue
         else:
             numFailures = 0
-            GPIO.output(errorGpio, False)
+            GPIO.output(errorGpio, True)
 
         for rule in rules:
-            enabled = False
+            enabled = True
 
-            if rule['check'] == 'any':
-                for slave in range(len(slaves)):
-                    if percentages[slave] > rule['percentage']:
-                        enabled = True
-            elif rule['check'] == 'all':
-                enabled = True
-                for slave in range(len(slaves)):
-                    if percentages[slave] < rule['percentage']:
-                        enabled = False
+            if eval(rule['check'].format(*percentages)):
+                enabled = False
 
             GPIO.output(rule['gpio'], enabled)
 
