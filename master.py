@@ -36,8 +36,8 @@ def run(config):
             try:
                 r = requests.get(address + '/data')
                 percentages.append(float(r.text))
-            except:
-                failedAddresses.append(address)
+            except Exception as e:
+                failedAddresses.append(address + ": " + str(e))
 
         if failedAddresses:
             numFailures += 1
