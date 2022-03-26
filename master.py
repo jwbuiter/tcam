@@ -34,7 +34,7 @@ def run(config):
 
         for address in slaves:
             try:
-                r = requests.get(address + '/data')
+                r = requests.get(address)
                 percentages.append(float(r.text))
             except Exception as e:
                 failedAddresses.append(address + ": " + str(e))
