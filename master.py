@@ -27,6 +27,7 @@ def run(config):
     GPIO.setup(errorGpio, GPIO.OUT, initial=GPIO.HIGH)
 
     numFailures = 0
+    counts = [0] * len(rules)
 
     while True:
         percentages = []
@@ -56,12 +57,12 @@ def run(config):
             numFailures = 0
             GPIO.output(errorGpio, True)
 
-        for rule in rules:
-            enabled = True
-
+        for i, rule in enumerate(rules):
             if eval(rule['check'].format(*percentages)):
-                enabled = False
+                counts[i]+=1
+            else:
+                counts[i]=0
 
-            GPIO.output(rule['gpio'], enabled)
+            GPIO.output(rule['gpio'], counts[i]<rule['count'])
 
         time.sleep(timeStep)
