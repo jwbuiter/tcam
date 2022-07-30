@@ -3,3 +3,4 @@ numpy==1.21.2
 Flask==2.0.1
 requests==2.26.0
 w1thermsensor==2.0.0
+schedule==1.1.0

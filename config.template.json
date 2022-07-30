@@ -8,6 +8,7 @@
     "errorGpio": 27,
     "errorCount": 1,
     "timeStep": 1,
+    "rebootTime": "00:00",
     "rules": [
         {
             "gpio": 17,
