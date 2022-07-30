@@ -4,7 +4,7 @@
         "http://192.168.1.216:5000/data",
         "http://192.168.1.236:5000/data"
     ],
-    "tempThreshold": 30,
+    "tempThresholdOffset": 5,
     "errorGpio": 27,
     "errorCount": 1,
     "timeStep": 1,

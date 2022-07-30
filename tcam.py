@@ -7,6 +7,7 @@ import os
 
 import numpy as np
 import adafruit_mlx90640
+from w1thermsensor import W1ThermSensor
 
 import slave
 import master
@@ -22,10 +23,11 @@ except:
     pass
 mlx_shape = (24, 32)  # mlx90640 shape
 frame = np.zeros(mlx_shape[0]*mlx_shape[1])
+sensor = W1ThermSensor()
 
 with open(os.path.join(sys.path[0], 'config.json')) as f:
     config = json.load(f)
-    threshold = config['tempThreshold']
+    thresholdOffset = config['tempThresholdOffset']
 
 try:
     with open(os.path.join(sys.path[0], 'map.csv'), 'r', encoding='utf-8-sig') as f:
@@ -44,6 +46,7 @@ def get_frame():
 
 
 def get_frame_threshold():
+    threshold = sensor.get_temperature() + thresholdOffset
     return np.where(get_frame() > threshold, 1, 0)
 
 
