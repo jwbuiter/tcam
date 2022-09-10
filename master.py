@@ -41,20 +41,15 @@ def run(config):
                 percentages.append(float(r.text))
             except Exception as e:
                 failedAddresses.append(address + ": " + str(e))
+                percentages.append(0)
 
         if failedAddresses:
             numFailures += 1
-
-            for rule in rules:
-                GPIO.output(rule['gpio'], True)
 
             if numFailures >= config['errorCount']:
                 GPIO.output(errorGpio, False)
                 if numFailures % config['errorCount'] == 0:
                     updateFailureLog(failedAddresses)
-
-            time.sleep(timeStep)
-            continue
         else:
             numFailures = 0
             GPIO.output(errorGpio, True)
