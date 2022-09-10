@@ -29,7 +29,11 @@ except:
     pass
 mlx_shape = (24, 32)  # mlx90640 shape
 frame = np.zeros(mlx_shape[0]*mlx_shape[1])
-sensor = W1ThermSensor()
+
+try:
+    sensor = W1ThermSensor()
+except:
+    pass
 
 with open(os.path.join(sys.path[0], 'config.json')) as f:
     config = json.load(f)
