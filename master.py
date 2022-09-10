@@ -4,7 +4,7 @@ import requests
 import RPi.GPIO as GPIO
 
 
-failureLogFilename = '/home/pi/Documents/errorlog.txt'
+failureLogFilename = ''
 
 
 def updateFailureLog(newItems):
@@ -21,6 +21,8 @@ def run(config):
     errorGpio = config['errorGpio']
     timeStep = config['timeStep']
     rules = config['rules']
+    global failureLogFilename
+    failureLogFilename = config['logFile']
 
     for rule in rules:
         GPIO.setup(rule['gpio'], GPIO.OUT, initial=GPIO.LOW)
