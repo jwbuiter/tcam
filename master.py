@@ -37,7 +37,7 @@ def run(config):
 
         for address in slaves:
             try:
-                r = requests.get(address)
+                r = requests.get(address, verify=False, timeout=5)
                 percentages.append(float(r.text))
             except Exception as e:
                 failedAddresses.append(address + ": " + str(e))
@@ -50,9 +50,11 @@ def run(config):
                 GPIO.output(errorGpio, False)
                 if numFailures % config['errorCount'] == 0:
                     updateFailureLog(failedAddresses)
+            print("error active " + str(failedAddresses)) 
         else:
             numFailures = 0
             GPIO.output(errorGpio, True)
+            print("error inactive")
 
         for i, rule in enumerate(rules):
             if eval(rule['check'].format(*percentages)):
@@ -61,5 +63,6 @@ def run(config):
                 counts[i]=0
 
             GPIO.output(rule['gpio'], counts[i]<rule['count'])
+            print(str(i) + " inactive" if str(counts[i]<rule['count']) else " active")
 
         time.sleep(timeStep)
